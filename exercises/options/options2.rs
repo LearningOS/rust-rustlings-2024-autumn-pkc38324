@@ -3,7 +3,6 @@
 // Execute `rustlings hint options2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 #[cfg(test)]
 mod tests {
@@ -12,9 +11,9 @@ mod tests {
         let target = "rustlings";
         let optional_target = Some(target);
 
-        // TODO: Make this an if let statement whose value is "Some" type
-        word = optional_target {
-            assert_eq!(word, target);
+        if let Some(value) = optional_target {
+            let word = value;  // 将 Some 的值赋给 word
+            assert_eq!(word, target);  // 断言 word 和 target 相等
         }
     }
 
@@ -32,10 +31,11 @@ mod tests {
         // TODO: make this a while let statement - remember that vector.pop also
         // adds another layer of Option<T>. You can stack `Option<T>`s into
         // while let and if let.
-        integer = optional_integers.pop() {
-            assert_eq!(integer, cursor);
-            cursor -= 1;
-        }
+        while let Some(integer)=optional_integers.pop() {
+            if integer.is_some()
+            {assert_eq!(integer.unwrap(), cursor);
+            cursor -= 1;}
+        } 
 
         assert_eq!(cursor, 0);
     }
