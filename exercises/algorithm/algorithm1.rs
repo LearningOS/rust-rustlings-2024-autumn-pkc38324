@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -43,6 +42,9 @@ impl<T> LinkedList<T> {
             end: None,
         }
     }
+}
+
+impl<T: std::cmp::PartialOrd> LinkedList<T> {
 
     pub fn add(&mut self, obj: T) {
         let mut node = Box::new(Node::new(obj));
@@ -71,12 +73,40 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut merged_list = LinkedList::new();
+
+        let mut a_ptr = list_a.start;
+        let mut b_ptr = list_b.start;
+
+        while let (Some(a_node), Some(b_node)) = (a_ptr, b_ptr) {
+            unsafe {
+                if (*a_node.as_ptr()).val <= (*b_node.as_ptr()).val {
+
+                    merged_list.add(std::ptr::read(&(*a_node.as_ptr()).val));
+                    a_ptr = (*a_node.as_ptr()).next; // Move to the next in list_a
+                } else {
+
+                    merged_list.add(std::ptr::read(&(*b_node.as_ptr()).val));
+                    b_ptr = (*b_node.as_ptr()).next; // Move to the next in list_b
+                }
+            }
         }
+
+        while let Some(a_node) = a_ptr {
+            unsafe {
+                merged_list.add(std::ptr::read(&(*a_node.as_ptr()).val));
+                a_ptr = (*a_node.as_ptr()).next;
+            }
+        }
+
+        while let Some(b_node) = b_ptr {
+            unsafe {
+                merged_list.add(std::ptr::read(&(*b_node.as_ptr()).val));
+                b_ptr = (*b_node.as_ptr()).next;
+            }
+        }
+
+        merged_list
 	}
 }
 
